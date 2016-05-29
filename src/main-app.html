@@ -1,0 +1,197 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="app-icons.html">
+
+<dom-module id="main-app">
+
+  <template>
+
+    <style>
+
+      :host {
+        display: block;
+        /*--app-primary-color: #4285f4;*/
+        --app-primary-color: #2ecc71;
+        --app-secondary-color: black;
+      }
+
+      app-header {
+        background-color: #fff;
+        /*background-color: var(--app-primary-color);*/
+        color: var(--app-primary-color);
+      }
+      app-drawer app-toolbar{
+        background-color: var(--app-primary-color);
+        color:#fff;
+      }
+
+      app-toolbar{
+          height: 100px;
+      }
+
+      #drawer-pane{
+        background-color: #34495e;
+        height:100%
+      }
+
+      .space {
+        @apply(--layout-flex);
+      }
+
+      app-header paper-icon-button {
+        /*--paper-icon-button-ink-color: white;*/
+        color: var(--app-secondary-color);
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        line-height: 40px;
+        text-decoration: none;
+        color: #818589;
+        /*color: var(--app-secondary-color);*/
+      }
+      .drawer-list a.iron-selected {
+        color: white;
+        font-weight: bold;
+        background-color: #34495e;
+      }
+      .drawer-list a.iron-activated{
+        color: white;
+        font-weight: bold;
+        background-color: #34495e;
+      }
+
+      .drawer-list a.subroute {
+        padding-left: 32px;
+      }
+
+      .avatar{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 8px;
+        background-color: #00BCD4;
+      }
+      .title{
+        font-size: 30px;
+        font-weight: 300;
+        /* Required for main area's paper-scroll-header-panel custom condensing transformation */
+        -webkit-transform-origin: left center;
+        transform-origin: left center;
+        }
+
+    </style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+
+    <app-drawer-layout fullbleed>
+
+      <!-- Drawer content -->
+      <app-drawer>
+        <app-toolbar>
+          <img src="../images/dp_new.png" class="avatar">
+          <span>Himali Kiran</span>
+        </app-toolbar>
+        <div id="drawer-pane">
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="main-dashboard" href="/main-dashboard"><iron-icon icon="dashboard"></iron-icon> Dashboard</a>
+          <a name="contacts-app" href="/contacts-app"><iron-icon icon="contacts"></iron-icon> Cotacts</a>
+          <a name="calendar-app" href="/calendar-app"><iron-icon icon="event"></iron-icon> Calendar</a>
+          <a name="projects-app" href="/projects-app"><iron-icon icon="description"></iron-icon> Projects</a>
+          <a name="knowledge-products" href="/knowledge-products"><iron-icon icon="picture-as-pdf"></iron-icon> Knowledge Products</a>
+          <a name="settings-app" href="/settings-app"><iron-icon icon="settings"></iron-icon> Settings</a>
+        </iron-selector>
+      </div>
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header reveals condenses reveals effects="waterfall">
+          <app-toolbar>
+            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+            <div class="title">Office Assist</div>
+            <span class="space"></span>
+            <paper-icon-button icon="search" halign='right' search-toggle></paper-icon-button>
+
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
+          <main-dashboard name="main-dashboard"></main-dashboard>
+          <contacts-app name="contacts-app"></contacts-app>
+          <calendar-app name="calendar-app"></calendar-app>
+          <projects-app name="projects-app"></projects-app>
+          <knowledge-products name="knowledge-products"></knowledge-products>
+          <settings-app name="settings-app"></settings-app>
+        </iron-pages>
+
+      </app-header-layout>
+
+    </app-drawer-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'main-app',
+
+      properties: {
+
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged'
+        },
+
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
+
+      _routePageChanged: function(page) {
+        this.page = page || 'main-dashboard';
+      },
+
+      _pageChanged: function(page) {
+        // load page import on demand.
+        this.importHref(
+          this.resolveUrl(page + '.html'), null, null, true);
+      }
+
+    });
+
+  </script>
+
+</dom-module>

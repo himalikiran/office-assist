@@ -1,0 +1,12 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/main-app.html",
+  "fragments": [
+    "src/main-dashboard.html",
+    "src/contacts-app.html",
+    "src/calendar-app.html",
+    "src/projects-app.html",
+    "src/knowledge-products.html",
+    "src/settings-app.html"
+  ]
+}
