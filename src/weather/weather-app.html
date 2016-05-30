@@ -1,0 +1,79 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+
+<dom-module id="weather-app">
+
+  <template>
+
+    <style>
+      :host {
+        display: block;
+        padding: 10px;
+      }
+      paper-card {
+        <!----paper-card-header-color:#000;-->
+      }
+
+      .temp {
+        font-size: 36px;
+        color: #666666;
+      }
+    </style>
+
+    <iron-ajax
+      auto
+      id="ajax"
+      url="https://api.wunderground.com/api/bbf2b500b73fdc04/conditions/q/Nepal/Patan.json"
+      handle-as="json"
+      on-response="handleResponse"
+      last-response="{{ajaxResponse}}"></iron-ajax>
+      <paper-card heading={{ajaxResponse.current_observation.display_location.full}} elevation=2>
+        <div class="card-content">{{ajaxResponse.current_observation.weather}}</div>
+
+        <div class="card-content">
+          <!--  <div class="subtitile">{{ajaxResponse.current_observation.weather}}</div>-->
+          <img src="{{ajaxResponse.current_observation.icon_url}}" style="float:left; vertical-align:middle;">
+          <span class="temp"> {{ajaxResponse.current_observation.temp_c}}°</span>
+          <!--<span style="display:inline" aria-label="°Celsius"><sup>°C</sup></span><br/>-->
+
+
+
+        </div>
+
+      </paper-card>
+      <!--
+      <span><img src="{{ajaxResponse.current_observation.icon_url}}" style="float:left; vertical-align:middle;">{{ajaxResponse.current_observation.temp_c}} Celsius</span>
+      <br />
+      <span>{{ajaxResponse.current_observation.display_location.full}}</span> -->
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'weather-app',
+      properties:{
+        foo: {
+          type: String,
+          value: 'weather-app',
+          notify:true
+        }
+      }
+
+    });
+
+  </script>
+
+</dom-module>
